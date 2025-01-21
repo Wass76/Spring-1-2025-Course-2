@@ -1,5 +1,7 @@
 package com.training.LearningManagmentSystem.student;
 
+import com.training.LearningManagmentSystem.course.Course;
+import com.training.LearningManagmentSystem.course.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +24,8 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addStudent(@RequestBody Student student) {
-        return ResponseEntity.ok(studentService.createStudent(student));
+    public ResponseEntity<?> addStudent(@RequestBody StudentRequest request) {
+        return ResponseEntity.ok(studentService.createStudent(request));
     }
 
     @GetMapping("{id}")
