@@ -28,7 +28,8 @@ public class StudentService {
                 .orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
     }
 
-    @Transactional
+
+
     public StudentResponse createStudent(StudentRequest request) {
         Course course = courseRepository.findById(request.getCourse())
                 .orElseThrow(() -> new RuntimeException("Course not found"));

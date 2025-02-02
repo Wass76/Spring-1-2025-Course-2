@@ -21,7 +21,7 @@ public class CourseService {
                 .orElseThrow(() -> new RuntimeException("Course not found with id: " + id));
     }
 
-    @Transactional
+
     public CourseResponse createCourse(CourseRequest request) {
         Course course = Course.builder()
                 .name(request.getName())
