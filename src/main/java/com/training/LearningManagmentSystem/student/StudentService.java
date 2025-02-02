@@ -6,20 +6,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class StudentService {
-    @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private CourseRepository courseRepository;
+    private final StudentRepository studentRepository;
+    private final CourseRepository courseRepository;
 
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+    public List<StudentResponse> getAllStudents() {
+        return studentRepository.findAll().stream().map(this::mapToResponse).collect(Collectors.toList());
     }
 
+    public StudentResponse getStudentById(Long id) {
+        return studentRepository.findById(id)
+                .map(this::mapToResponse)
+                .orElseThrow(() -> new RuntimeException("Student not found with id: " + id));
+    }
+
+    @Transactional
     public StudentResponse createStudent(StudentRequest request) {
-        Course course = courseRepository.findById(request.getCourse()).orElse(null);
+        Course course = courseRepository.findById(request.getCourse())
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
         Student student = Student.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
@@ -27,35 +40,41 @@ public class StudentService {
                 .mark(request.getMark())
                 .course(course)
                 .build();
-        studentRepository.save(student);
 
+        student = studentRepository.save(student);
+        return mapToResponse(student);
+    }
+
+    @Transactional
+    public StudentResponse updateStudent(Long id, StudentRequest request) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        Course course = courseRepository.findById(request.getCourse())
+                .orElseThrow(() -> new RuntimeException("Course not found"));
+
+        student.setFirstName(request.getFirstName());
+        student.setLastName(request.getLastName());
+        student.setAge(request.getAge());
+        student.setMark(request.getMark());
+        student.setCourse(course);
+
+        student = studentRepository.save(student);
+        return mapToResponse(student);
+    }
+
+    public void deleteStudent(Long id) {
+        studentRepository.deleteById(id);
+    }
+
+    private StudentResponse mapToResponse(Student student) {
         return StudentResponse.builder()
+                .studentId(student.getId())
                 .firstName(student.getFirstName())
                 .lastName(student.getLastName())
-                .studentId(student.getId())
-                .mark(student.getMark())
                 .age(student.getAge())
+                .mark(student.getMark())
+                .course(student.getCourse().getId())
                 .build();
-    }
-    public Student getStudent(Long id) {
-        return studentRepository.findById(id).orElse(null);
-    }
-
-    public Student updateStudent(Long id , Student request){
-
-        Student updatedStud = studentRepository.findById(id).orElse(null);
-
-        updatedStud.setFirstName(request.getFirstName());
-        updatedStud.setLastName(request.getLastName());
-        updatedStud.setAge(request.getAge());
-        updatedStud.setMark(request.getMark());
-
-        return studentRepository.save(updatedStud);
-//        return updatedStud;
-    }
-
-    public String deleteStudent(Long id) {
-        studentRepository.deleteById(id);
-        return "Student deleted successfully";
     }
 }
