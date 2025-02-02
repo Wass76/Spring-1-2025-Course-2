@@ -1,11 +1,14 @@
 package com.training.LearningManagmentSystem.student;
 
 import com.training.LearningManagmentSystem.course.Course;
+import com.training.LearningManagmentSystem.teacher.Teacher;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -28,4 +31,7 @@ public class Student {
 
     @ManyToOne
     private Course course;
+
+    @ManyToMany(mappedBy = "students")
+    private List<Teacher> teachers;
 }

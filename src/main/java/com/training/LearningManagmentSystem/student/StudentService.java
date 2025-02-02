@@ -2,9 +2,12 @@ package com.training.LearningManagmentSystem.student;
 
 import com.training.LearningManagmentSystem.course.Course;
 import com.training.LearningManagmentSystem.course.CourseRepository;
+import com.training.LearningManagmentSystem.teacher.Teacher;
+import com.training.LearningManagmentSystem.teacher.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,7 @@ import java.util.stream.Collectors;
 public class StudentService {
     private final StudentRepository studentRepository;
     private final CourseRepository courseRepository;
+    private final TeacherRepository teacherRepository;
 
     public List<StudentResponse> getAllStudents() {
         return studentRepository.findAll().stream().map(this::mapToResponse).collect(Collectors.toList());
@@ -34,12 +38,20 @@ public class StudentService {
         Course course = courseRepository.findById(request.getCourse())
                 .orElseThrow(() -> new RuntimeException("Course not found"));
 
+        List<Teacher> teachers = new ArrayList<>();
+        for(Integer id : request.getTeacherId()){
+            Teacher teacher = teacherRepository.findById(id).orElse(null);
+            if(teacher != null){
+                teachers.add(teacher);
+            }
+        }
         Student student = Student.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .age(request.getAge())
                 .mark(request.getMark())
                 .course(course)
+                .teachers(teachers)
                 .build();
 
         student = studentRepository.save(student);
@@ -69,6 +81,10 @@ public class StudentService {
     }
 
     private StudentResponse mapToResponse(Student student) {
+        List<Integer> teacherIds = new ArrayList<>();
+        for(Teacher t : student.getTeachers()){
+            teacherIds.add(t.getId());
+        }
         return StudentResponse.builder()
                 .studentId(student.getId())
                 .firstName(student.getFirstName())
@@ -76,6 +92,7 @@ public class StudentService {
                 .age(student.getAge())
                 .mark(student.getMark())
                 .course(student.getCourse().getId())
+                .teachers(teacherIds)
                 .build();
     }
 }
