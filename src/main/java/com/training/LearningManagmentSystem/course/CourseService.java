@@ -32,7 +32,6 @@ public class CourseService {
         return mapToResponse(course);
     }
 
-    @Transactional
     public CourseResponse updateCourse(Long id, CourseRequest request) {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Course not found"));

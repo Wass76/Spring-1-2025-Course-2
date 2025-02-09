@@ -54,11 +54,10 @@ public class StudentService {
                 .teachers(teachers)
                 .build();
 
-        student = studentRepository.save(student);
+        studentRepository.save(student);
         return mapToResponse(student);
     }
 
-    @Transactional
     public StudentResponse updateStudent(Long id, StudentRequest request) {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
