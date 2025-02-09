@@ -1,6 +1,8 @@
 package com.training.LearningManagmentSystem.teacher;
 
+import com.training.LearningManagmentSystem.configuration.NotFoundInDatabaseException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +18,7 @@ public class TeacherController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getTeacherById(@PathVariable Integer id) {
+    public ResponseEntity<?> getTeacherById(@PathVariable Integer id) throws NotFoundInDatabaseException {
         return teacherService.findById(id);
     }
 
