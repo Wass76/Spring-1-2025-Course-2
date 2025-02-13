@@ -2,6 +2,8 @@ package com.training.LearningManagmentSystem.teacher;
 
 import com.training.LearningManagmentSystem.student.Student;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,7 +25,6 @@ public class Teacher {
     )
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "teacher_id")
     private Integer id;
-
 
     private String firstName;
     private String lastName;

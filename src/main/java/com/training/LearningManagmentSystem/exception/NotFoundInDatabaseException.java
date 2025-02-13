@@ -1,4 +1,4 @@
-package com.training.LearningManagmentSystem.configuration;
+package com.training.LearningManagmentSystem.exception;
 
 public class NotFoundInDatabaseException extends Exception{
     public NotFoundInDatabaseException() {

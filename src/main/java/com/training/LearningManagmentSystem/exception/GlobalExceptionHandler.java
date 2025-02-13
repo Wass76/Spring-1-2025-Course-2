@@ -1,7 +1,6 @@
-package com.training.LearningManagmentSystem.configuration;
+package com.training.LearningManagmentSystem.exception;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -15,4 +14,13 @@ public class GlobalExceptionHandler {
                         ex.getMessage()
                 );
     }
+
+    @ExceptionHandler(ObjectNotValidException.class)
+    public ResponseEntity<?> handleException(ObjectNotValidException ex){
+        return ResponseEntity
+                .badRequest().body(
+                        ex.getMessage()
+                );
+    }
+
 }
