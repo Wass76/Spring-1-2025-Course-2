@@ -28,7 +28,7 @@ public class TeacherController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTeacher(@PathVariable Integer id) throws NotFoundInDatabaseException {
-        return teacherService.deleteStudent(id);
+        return teacherService.deleteTeacher(id);
     }
 
 

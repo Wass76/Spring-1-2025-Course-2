@@ -27,14 +27,14 @@ public class TeacherService {
 
 
     public ResponseEntity<?> findById(Integer id) throws NotFoundInDatabaseException {
-        Teacher teacher = teacherRepository.findById(id).orElseThrow(() -> new NotFoundInDatabaseException("student not found"));
+        Teacher teacher = teacherRepository.findById(id).orElseThrow(() -> new NotFoundInDatabaseException("teacher not found"));
         return ResponseEntity.status(HttpStatus.OK).body(mapToResponse(teacher));
     }
 
 
     public ResponseEntity updateTeacher(Integer id, TeacherRequest request) throws NotFoundInDatabaseException {
         Teacher teacher = teacherRepository.findById(id)
-                .orElseThrow(() -> new NotFoundInDatabaseException("Student not found"));
+                .orElseThrow(() -> new NotFoundInDatabaseException("teacher not found"));
         validator.validate(request);
         teacher.setFirstName(request.getFirstName());
         teacher.setLastName(request.getLastName());
@@ -43,8 +43,8 @@ public class TeacherService {
         return ResponseEntity.ok().body(mapToResponse(teacher));
     }
 
-    public ResponseEntity<?> deleteStudent(Integer id) throws NotFoundInDatabaseException {
-        Teacher teacher = teacherRepository.findById(id).orElseThrow(() -> new NotFoundInDatabaseException("student not found"));
+    public ResponseEntity<?> deleteTeacher(Integer id) throws NotFoundInDatabaseException {
+        Teacher teacher = teacherRepository.findById(id).orElseThrow(() -> new NotFoundInDatabaseException("teacher not found"));
         teacherRepository.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body("teacher deleted successfully");
     }
